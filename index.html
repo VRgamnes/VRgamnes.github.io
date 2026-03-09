@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Something Is Behind You VR</title>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<script>
+/* ============================================================
+   🎮 YOUR GAME SETTINGS — EASY TO CHANGE!
+   Just edit the words and colors below. Nothing else!
+   Colors must start with # followed by 6 letters/numbers.
+   You can pick colors at: https://htmlcolorpicker.com
+   ============================================================ */
+
+const GAME = {
+
+  /* --- YOUR GAME'S NAME --- */
+  name: "Something Is Behind You",
+  subtitle: "VR",
+
+  /* --- SHORT TAGLINE shown under the title --- */
+  tagline: "They only move when you look away.",
+
+  /* --- ABOUT PAGE text (keep inside the quotes) --- */
+  aboutText1: "You wake up in an abandoned hospital. Something is watching you. Something has always been watching you. But the moment you turn around — it's gone.",
+  aboutText2: "Something Is Behind You VR is a terrifying multiplayer horror experience built for virtual reality. Work together with friends — or die alone.",
+  aboutText3: "Every shadow hides a secret. Every sound is a warning. Will you survive the night?",
+
+  /* --- MULTIPLAYER description --- */
+  multiplayerDesc: "Up to 4 players can enter the nightmare together. Communicate, cooperate, and try not to get separated. The creatures can hear you through your microphone.",
+
+  /* --- DOWNLOAD page message --- */
+  downloadMessage: "Dare to download. Dare to play. Do not play alone.",
+
+  /* --- FEATURES (3 cards on the About page) --- */
+  features: [
+    {
+      icon: "👁️",
+      title: "Full VR Immersion",
+      desc: "Built from the ground up for VR headsets. The horror follows you into your living room."
+    },
+    {
+      icon: "🎙️",
+      title: "Voice Detection",
+      desc: "The monsters hear you. Scream and they find you. Stay silent or stay dead."
+    },
+    {
+      icon: "👥",
+      title: "Multiplayer Terror",
+      desc: "Up to 4 players. Trust nobody. Survive together — or separately."
+    }
+  ],
+
+  /* --- MULTIPLAYER MODES --- */
+  modes: [
+    {
+      icon: "💀",
+      title: "Survival Mode",
+      badge: "4 Players",
+      desc: "Work together to escape before dawn. Every decision matters. Not everyone makes it out."
+    },
+    {
+      icon: "🔪",
+      title: "Traitor Mode",
+      badge: "NEW",
+      desc: "One player is secretly working against the group. Trust no one. Watch your back."
+    },
+    {
+      icon: "🏃",
+      title: "Solo Run",
+      badge: "1 Player",
+      desc: "Face the darkness alone. No backup. No second chances. The purest horror experience."
+    }
+  ],
+
+  /* --- PLATFORM STATUS ("Coming Soon" or "Available Now") --- */
+  platforms: [
+    { icon: "🥽", name: "Meta Quest", sub: "Quest 2 / 3 / Pro", status: "Available Now", live: true },
+    { icon: "🖥️", name: "PC VR", sub: "SteamVR / Index", status: "Available Now", live: true },
+    { icon: "🎮", name: "PSVR2", sub: "PlayStation 5", status: "Coming Soon", live: false }
+  ],
+
+  /* --- COLORS ---
+     Pick colors at: https://htmlcolorpicker.com  */
+  colors: {
+    accent: "#cc0000",       /* Main red color (blood red) */
+    accentDark: "#8B0000",   /* Darker red */
+    background: "#0a0a0f",   /* Main background (very dark) */
+    textColor: "#e8e0d0",    /* Main text color (bone white) */
+  },
+
+  /* --- SOCIAL LINKS (leave "" if you don't have them yet) --- */
+  discordLink: "",
+  twitterLink: "",
+  steamLink: "",
+
+  /* --- GALLERY SCREENSHOTS
+       To add your own screenshots:
+       1. Upload image files to your GitHub repo
+       2. Replace "" with the file name e.g. "screenshot1.jpg"
+       Leave as "" to show a placeholder until you have real screenshots. --- */
+  screenshots: [
+    { file: "", label: "The Hospital", emoji: "🏚️" },
+    { file: "", label: "The Creature", emoji: "👁️" },
+    { file: "", label: "The Dark", emoji: "🌑" },
+    { file: "", label: "Found You", emoji: "🩸" },
+    { file: "", label: "The Chase", emoji: "💀" },
+    { file: "", label: "No Escape", emoji: "🔒" },
+  ]
+};
+
+/* ============================================================
+   STOP EDITING HERE — everything below runs the website
+   ============================================================ */
+</script>
+
+<style>
+  * { margin:0;padding:0;box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    background:var(--bg);color:var(--text);
+    font-family:'Crimson Text',serif;
+    cursor:none;overflow-x:hidden;
+  }
+  :root {
+    --accent:#cc0000;--accent-dark:#8B0000;
+    --bg:#0a0a0f;--bg2:#111118;--text:#e8e0d0;
+    --glow:rgba(204,0,0,0.5);
+  }
+
+  /* CURSOR */
+  #cursor{width:18px;height:18px;border:1px solid var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform 0.08s}
+  #cursor-dot{width:4px;height:4px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:99999;transform:translate(-50%,-50%)}
+
+  /* NOISE OVERLAY */
+  body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9990;opacity:0.35}
+
+  /* NAV */
+  nav{position:fixed;top:0;width:100%;z-index:1000;padding:18px 50px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(0,0,0,0.96),transparent);border-bottom:1px solid rgba(204,0,0,0.2)}
+  .nav-logo{font-family:'Creepster',cursive;font-size:1.3rem;color:var(--accent);letter-spacing:2px;text-shadow:0 0 20px var(--glow)}
+  .nav-links{display:flex;gap:35px;list-style:none}
+  .nav-links a{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:rgba(232,224,208,0.55);text-decoration:none;transition:all 0.3s}
+  .nav-links a:hover,.nav-links a.active{color:var(--accent);text-shadow:0 0 8px var(--glow)}
+
+  /* PAGES */
+  .page{display:none;min-height:100vh}
+  .page.active{display:block}
+
+  /* HOME */
+  #home{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden}
+  .home-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 90%,rgba(139,0,0,0.18) 0%,transparent 60%),radial-gradient(ellipse at 50% 50%,rgba(20,0,0,0.5) 0%,transparent 70%),linear-gradient(to bottom,#000005,#080003,#050010)}
+  .scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);pointer-events:none}
+  .particle{position:absolute;width:2px;height:2px;background:rgba(204,0,0,0.5);border-radius:50%;animation:floatUp linear infinite}
+  @keyframes floatUp{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:1}90%{opacity:0.4}100%{transform:translateY(-10px) translateX(var(--drift));opacity:0}}
+
+  /* Eye */
+  .eye-wrap{position:relative;margin-bottom:45px;width:180px;height:180px}
+  .eyeball{width:180px;height:180px;border-radius:50%;background:radial-gradient(circle at 38% 38%,#fff 0%,#ccc 25%,#777 55%,#000 100%);box-shadow:0 0 60px rgba(200,0,0,0.9),0 0 120px rgba(139,0,0,0.4),inset 0 0 25px rgba(0,0,0,0.9);animation:blink 7s ease-in-out infinite;position:relative}
+  .eyeball::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#2a0000,#000);box-shadow:0 0 15px rgba(200,0,0,0.4)}
+  .eyeball::after{content:'';position:absolute;top:28%;left:32%;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,0.55);filter:blur(3px)}
+  .eye-veins{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:260px;height:260px;pointer-events:none;animation:veinPulse 3s ease-in-out infinite}
+  @keyframes blink{0%,43%,57%,100%{transform:scaleY(1)}50%{transform:scaleY(0.04)}}
+  @keyframes veinPulse{0%,100%{opacity:0.25}50%{opacity:0.5}}
+
+  .hero-title{font-family:'Creepster',cursive;font-size:clamp(2.8rem,7vw,6.5rem);text-align:center;line-height:0.95;color:#fff;letter-spacing:4px;text-shadow:0 0 30px var(--glow),0 0 60px rgba(204,0,0,0.4),2px 2px 0 #000;animation:flicker 9s ease-in-out infinite;position:relative;z-index:2}
+  .hero-title em{display:block;color:var(--accent);font-style:normal;font-size:0.55em;letter-spacing:12px;text-shadow:0 0 15px var(--glow)}
+  @keyframes flicker{0%,93%,100%{opacity:1}94%{opacity:0.2}96%{opacity:1}98%{opacity:0.05}99%{opacity:1}}
+
+  .hero-sub{font-family:'Share Tech Mono',monospace;font-size:0.8rem;letter-spacing:5px;text-transform:uppercase;color:rgba(232,224,208,0.45);margin-top:22px;text-align:center;position:relative;z-index:2;animation:glitch 12s ease-in-out infinite}
+  @keyframes glitch{0%,88%,100%{transform:none;text-shadow:none}89%{transform:skewX(-4deg);text-shadow:2px 0 var(--accent)}90%{transform:skewX(4deg);text-shadow:-2px 0 cyan}91%{transform:none}}
+
+  .hero-btns{display:flex;gap:18px;margin-top:48px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2}
+  .btn{font-family:'Share Tech Mono',monospace;font-size:0.75rem;letter-spacing:4px;text-transform:uppercase;padding:15px 38px;text-decoration:none;cursor:none;transition:all 0.3s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)}
+  .btn-red{background:var(--accent-dark);color:var(--text);border:1px solid var(--accent)}
+  .btn-red:hover{background:var(--accent);box-shadow:0 0 25px var(--glow);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid rgba(232,224,208,0.25)}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 15px rgba(204,0,0,0.2)}
+
+  .scroll-cue{position:absolute;bottom:35px;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:4px;color:rgba(232,224,208,0.25);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .scroll-line{width:1px;height:45px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scrollDrop 2s ease-in-out infinite}
+  @keyframes scrollDrop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+  /* SHARED SECTION */
+  .section-wrap{max-width:1180px;margin:0 auto}
+  .section-head{text-align:center;margin-bottom:70px}
+  .section-tag{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:6px;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:14px;opacity:0.85}
+  .section-title{font-family:'Creepster',cursive;font-size:clamp(2.2rem,4.5vw,4rem);color:var(--text);letter-spacing:3px;text-shadow:0 0 15px rgba(204,0,0,0.3)}
+  .divider{width:80px;height:1px;background:linear-gradient(to right,transparent,var(--accent),transparent);margin:20px auto 0}
+
+  /* ABOUT */
+  #about{padding:110px 50px 80px;background:linear-gradient(to bottom,var(--bg),var(--bg2));position:relative;overflow:hidden}
+  #about::before{content:'';position:absolute;top:-150px;right:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(139,0,0,0.07),transparent 70%);pointer-events:none}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+  .about-text p{font-size:1.18rem;line-height:1.9;color:rgba(232,224,208,0.78);margin-bottom:22px}
+  .about-text p strong{color:var(--accent);font-style:italic}
+  .about-visual{height:420px;position:relative;display:flex;align-items:center;justify-content:center}
+  .ring{position:absolute;border-radius:50%;border:1px solid;animation:spin linear infinite}
+  .ring:nth-child(1){width:280px;height:280px;border-color:rgba(204,0,0,0.35);animation-duration:22s}
+  .ring:nth-child(2){width:210px;height:210px;border-color:rgba(139,0,0,0.3);animation-duration:16s;animation-direction:reverse;border-style:dashed}
+  .ring:nth-child(3){width:150px;height:150px;border-color:rgba(204,0,0,0.5);animation-duration:10s}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  .vr-icon{width:90px;height:55px;background:linear-gradient(135deg,#180000,#000);border:1px solid var(--accent-dark);border-radius:14px;box-shadow:0 0 35px rgba(139,0,0,0.7),inset 0 0 15px rgba(139,0,0,0.2);display:flex;align-items:center;justify-content:center;gap:8px;z-index:2}
+  .lens{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(139,0,0,0.8),rgba(0,0,0,0.95));border:1px solid rgba(204,0,0,0.5);box-shadow:0 0 8px rgba(139,0,0,0.5)}
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:25px;margin-top:70px}
+  .feat-card{background:linear-gradient(135deg,rgba(139,0,0,0.07),rgba(0,0,0,0.55));border:1px solid rgba(139,0,0,0.22);padding:32px 26px;position:relative;overflow:hidden;transition:all 0.4s;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+  .feat-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:0;background:var(--accent);transition:height 0.4s}
+  .feat-card:hover{border-color:rgba(204,0,0,0.5);transform:translateY(-5px)}
+  .feat-card:hover::before{height:100%}
+  .feat-icon{font-size:1.9rem;display:block;margin-bottom:14px;filter:drop-shadow(0 0 8px var(--glow))}
+  .feat-card h3{font-family:'Creepster',cursive;font-size:1.35rem;color:var(--accent);letter-spacing:2px;margin-bottom:10px}
+  .feat-card p{font-size:0.97rem;line-height:1.7;color:rgba(232,224,208,0.6)}
+
+  /* MULTIPLAYER */
+  #multiplayer{padding:110px 50px 80px;background:linear-gradient(to bottom,var(--bg2),#050010);position:relative;overflow:hidden}
+  .mp-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+  .mp-info h2{font-family:'Creepster',cursive;font-size:clamp(1.9rem,3.5vw,3.2rem);color:var(--text);letter-spacing:3px;margin-bottom:28px;line-height:1.1}
+  .mp-info h2 em{color:var(--accent);font-style:normal}
+  .mp-info p{font-size:1.12rem;line-height:1.85;color:rgba(232,224,208,0.72);margin-bottom:18px}
+  .mode-list{display:flex;flex-direction:column;gap:18px}
+  .mode-card{background:rgba(0,0,0,0.6);border:1px solid rgba(139,0,0,0.28);padding:22px 26px;display:flex;gap:18px;align-items:flex-start;transition:all 0.3s;position:relative;overflow:hidden}
+  .mode-card::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(139,0,0,0.04),transparent);opacity:0;transition:opacity 0.3s}
+  .mode-card:hover{border-color:var(--accent)}
+  .mode-card:hover::after{opacity:1}
+  .mode-hex{width:46px;height:46px;flex-shrink:0;background:rgba(139,0,0,0.18);border:1px solid rgba(139,0,0,0.4);display:flex;align-items:center;justify-content:center;font-size:1.3rem;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)}
+  .mode-info h3{font-family:'Creepster',cursive;font-size:1.2rem;color:var(--accent);letter-spacing:2px;margin-bottom:6px}
+  .badge{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:3px;text-transform:uppercase;background:rgba(139,0,0,0.25);border:1px solid rgba(139,0,0,0.45);color:var(--accent);padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .mode-info p{font-size:0.92rem;color:rgba(232,224,208,0.58);line-height:1.6}
+  .live-box{background:rgba(0,0,0,0.75);border:1px solid rgba(139,0,0,0.35);padding:28px;margin-top:36px;text-align:center}
+  .live-label{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:5px;text-transform:uppercase;color:rgba(232,224,208,0.38);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+  .live-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:livePulse 2s ease-in-out infinite}
+  @keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(204,0,0,0.4)}50%{opacity:0.5;box-shadow:0 0 0 5px transparent}}
+  .live-count{font-family:'Creepster',cursive;font-size:2.8rem;color:var(--accent);text-shadow:0 0 18px var(--glow);animation:flicker 6s infinite}
+
+  /* GALLERY */
+  #gallery{padding:110px 50px 80px;background:linear-gradient(to bottom,#050010,var(--bg))}
+  .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:0}
+  .g-item{position:relative;overflow:hidden;aspect-ratio:4/3;background:rgba(139,0,0,0.04);border:1px solid rgba(139,0,0,0.13);cursor:none;transition:all 0.4s}
+  .g-item:nth-child(1){grid-column:span 2;aspect-ratio:auto;min-height:320px}
+  .g-item:nth-child(5){grid-column:span 2;aspect-ratio:auto;min-height:260px}
+  .g-item:hover{border-color:rgba(204,0,0,0.55);z-index:2;transform:scale(1.01)}
+  .g-bg{width:100%;height:100%;min-height:inherit;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+  .g-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .g-emoji{font-size:2.8rem;position:relative;z-index:1;filter:drop-shadow(0 0 12px var(--glow));animation:floatEmoji 4s ease-in-out infinite}
+  @keyframes floatEmoji{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .g-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:4px;text-transform:uppercase;color:rgba(232,224,208,0.28);position:relative;z-index:1}
+  .g-hover{position:absolute;inset:0;background:rgba(0,0,0,0.72);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0;transition:opacity 0.3s;z-index:10}
+  .g-item:hover .g-hover{opacity:1}
+  .g-hover-title{font-family:'Creepster',cursive;font-size:1.25rem;color:var(--accent);letter-spacing:3px}
+  .g-hover-sub{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:3px;color:rgba(232,224,208,0.45);text-transform:uppercase}
+  .gb-0::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,rgba(139,0,0,0.3),rgba(0,0,0,0.88) 60%),linear-gradient(135deg,#0a0005,#050010)}
+  .gb-1::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 40%,rgba(0,50,50,0.4),rgba(0,0,0,0.95) 60%)}
+  .gb-2::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(80,0,0,0.4),rgba(0,0,0,0.9) 70%)}
+  .gb-3::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,0.95),rgba(40,0,0,0.5),rgba(0,0,0,0.95))}
+  .gb-4::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 70%,rgba(139,0,0,0.25),transparent 50%),radial-gradient(ellipse at 80% 30%,rgba(0,30,50,0.4),transparent 50%),#000}
+  .gb-5::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#050005,rgba(100,0,0,0.2),#000)}
+
+  /* DOWNLOAD */
+  #download{padding:110px 50px 80px;background:linear-gradient(to bottom,var(--bg),#000003);position:relative;overflow:hidden}
+  .dl-center{max-width:820px;margin:0 auto;text-align:center}
+  .dl-warning{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--accent);border:1px solid rgba(139,0,0,0.4);padding:11px 22px;display:inline-block;margin-bottom:55px;animation:warnFlash 3s ease-in-out infinite}
+  @keyframes warnFlash{0%,100%{border-color:rgba(139,0,0,0.4);color:var(--accent)}50%{border-color:rgba(204,0,0,0.8);color:#ff4444;box-shadow:0 0 12px rgba(139,0,0,0.3)}}
+  .dl-title{font-family:'Creepster',cursive;font-size:clamp(2.8rem,5.5vw,5rem);color:var(--text);letter-spacing:4px;text-shadow:0 0 25px rgba(204,0,0,0.4);margin-bottom:18px}
+  .dl-sub{font-size:1.15rem;color:rgba(232,224,208,0.58);line-height:1.8;margin-bottom:55px;font-style:italic}
+  .platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:55px}
+  .plat-card{background:linear-gradient(135deg,rgba(139,0,0,0.09),rgba(0,0,0,0.8));border:1px solid rgba(139,0,0,0.28);padding:32px 18px;transition:all 0.4s;cursor:none;text-align:center}
+  .plat-card:hover{border-color:var(--accent);transform:translateY(-7px);box-shadow:0 18px 35px rgba(139,0,0,0.18)}
+  .plat-icon{font-size:2.3rem;display:block;margin-bottom:13px}
+  .plat-card h3{font-family:'Creepster',cursive;font-size:1.3rem;color:var(--accent);letter-spacing:2px;margin-bottom:6px}
+  .plat-card p{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:2px;color:rgba(232,224,208,0.38);text-transform:uppercase;margin-bottom:18px}
+  .plat-status{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;padding:5px 14px;border:1px solid;display:inline-block}
+  .status-live{border-color:rgba(0,200,100,0.45);color:rgba(0,200,100,0.8);background:rgba(0,200,100,0.05)}
+  .status-soon{border-color:rgba(232,224,208,0.18);color:rgba(232,224,208,0.28)}
+  .sysreq{background:rgba(0,0,0,0.6);border:1px solid rgba(139,0,0,0.2);padding:38px;text-align:left}
+  .sysreq h3{font-family:'Creepster',cursive;font-size:1.7rem;color:var(--accent);letter-spacing:2px;margin-bottom:28px;text-align:center}
+  .req-cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  .req-col h4{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:rgba(232,224,208,0.45);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(139,0,0,0.2)}
+  .req-row{display:flex;gap:10px;margin-bottom:10px;font-size:0.92rem;color:rgba(232,224,208,0.68)}
+  .req-row span:first-child{color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:0.65rem;min-width:55px;padding-top:2px}
+
+  /* FOOTER */
+  footer{background:#000;border-top:1px solid rgba(139,0,0,0.18);padding:36px 50px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px}
+  .foot-logo{font-family:'Creepster',cursive;font-size:1.15rem;color:var(--accent);text-shadow:0 0 8px var(--glow);letter-spacing:2px}
+  footer p{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:3px;color:rgba(232,224,208,0.22);text-transform:uppercase}
+  .foot-links{display:flex;gap:20px}
+  .foot-links a{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:rgba(232,224,208,0.3);text-decoration:none;transition:color 0.3s}
+  .foot-links a:hover{color:var(--accent)}
+
+  @media(max-width:768px){
+    nav{padding:14px 18px}
+    .nav-links{gap:10px}
+    .nav-links a{font-size:0.58rem;letter-spacing:1px}
+    #home,#about,#multiplayer,#gallery,#download{padding-left:20px;padding-right:20px}
+    .about-grid,.mp-grid{grid-template-columns:1fr}
+    .about-visual{height:260px}
+    .features,.platform-grid{grid-template-columns:1fr}
+    .gallery-grid{grid-template-columns:1fr 1fr}
+    .req-cols{grid-template-columns:1fr}
+    footer{flex-direction:column;text-align:center}
+  }
+</style>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-dot"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" id="navLogo"></div>
+  <ul class="nav-links">
+    <li><a href="#" onclick="return showPage('home')" class="active" id="nav-home">Home</a></li>
+    <li><a href="#" onclick="return showPage('about')" id="nav-about">About</a></li>
+    <li><a href="#" onclick="return showPage('multiplayer')" id="nav-multiplayer">Multiplayer</a></li>
+    <li><a href="#" onclick="return showPage('gallery')" id="nav-gallery">Gallery</a></li>
+    <li><a href="#" onclick="return showPage('download')" id="nav-download">Download</a></li>
+  </ul>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="home">
+  <div class="home-bg"></div>
+  <div class="scanlines"></div>
+  <div id="particleContainer"></div>
+  <div class="eye-wrap">
+    <svg class="eye-veins" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M130 10 Q160 60 200 80 Q240 100 250 130 Q240 160 200 180 Q160 200 130 250 Q100 200 60 180 Q20 160 10 130 Q20 100 60 80 Q100 60 130 10Z" stroke="#8B0000" stroke-width="0.5" fill="none"/>
+      <path d="M130 30 Q155 75 185 90 Q215 110 225 130" stroke="#8B0000" stroke-width="0.5"/>
+      <path d="M130 30 Q105 75 75 90 Q45 110 35 130" stroke="#8B0000" stroke-width="0.5"/>
+      <path d="M200 80 Q185 100 190 130 Q195 155 180 175" stroke="#8B0000" stroke-width="0.3"/>
+      <path d="M60 80 Q75 100 70 130 Q65 155 80 175" stroke="#8B0000" stroke-width="0.3"/>
+    </svg>
+    <div class="eyeball"></div>
+  </div>
+  <h1 class="hero-title" id="heroTitle"></h1>
+  <p class="hero-sub" id="heroSub"></p>
+  <div class="hero-btns">
+    <a href="#" class="btn btn-red" onclick="return showPage('download')">Download Now</a>
+    <a href="#" class="btn btn-ghost" onclick="return showPage('about')">Learn More</a>
+  </div>
+  <div class="scroll-cue"><div class="scroll-line"></div><span>Scroll</span></div>
+</div>
+
+<!-- ABOUT PAGE -->
+<div class="page" id="about">
+  <div class="section-wrap">
+    <div class="section-head">
+      <span class="section-tag">About The Game</span>
+      <h2 class="section-title" id="aboutTitle"></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text" id="aboutText"></div>
+      <div class="about-visual">
+        <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+        <div class="vr-icon"><div class="lens"></div><div class="lens"></div></div>
+      </div>
+    </div>
+    <div class="features" id="featuresGrid"></div>
+  </div>
+</div>
+
+<!-- MULTIPLAYER PAGE -->
+<div class="page" id="multiplayer">
+  <div class="section-wrap">
+    <div class="section-head">
+      <span class="section-tag">Online Multiplayer</span>
+      <h2 class="section-title">No One Survives <span style="color:var(--accent)">Alone</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="mp-grid">
+      <div class="mp-info">
+        <h2>Face the <em>Darkness</em><br>Together</h2>
+        <p id="mpDesc"></p>
+        <p style="font-size:1rem;color:rgba(232,224,208,0.5);font-style:italic">Cross-platform play supported. Friends on different headsets can enter the same nightmare.</p>
+        <div class="live-box">
+          <div class="live-label"><div class="live-dot"></div> Players Online Right Now</div>
+          <div class="live-count" id="liveCount">1,247</div>
+        </div>
+      </div>
+      <div class="mode-list" id="modeList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY PAGE -->
+<div class="page" id="gallery">
+  <div class="section-wrap">
+    <div class="section-head">
+      <span class="section-tag">Screenshots</span>
+      <h2 class="section-title">Inside The Nightmare</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="gallery-grid" id="galleryGrid"></div>
+</div>
+
+<!-- DOWNLOAD PAGE -->
+<div class="page" id="download">
+  <div class="dl-center">
+    <div class="dl-warning">⚠ &nbsp; Not recommended for the faint of heart &nbsp; ⚠</div>
+    <h1 class="dl-title">Get The Game</h1>
+    <p class="dl-sub" id="dlSub"></p>
+    <div class="platform-grid" id="platformGrid"></div>
+    <div class="sysreq">
+      <h3>System Requirements</h3>
+      <div class="req-cols">
+        <div class="req-col">
+          <h4>Minimum</h4>
+          <div class="req-row"><span>CPU</span><span>Intel i5-8600 / AMD Ryzen 5 2600</span></div>
+          <div class="req-row"><span>RAM</span><span>8 GB</span></div>
+          <div class="req-row"><span>GPU</span><span>GTX 1070 / RX 5700</span></div>
+          <div class="req-row"><span>OS</span><span>Windows 10 64-bit</span></div>
+          <div class="req-row"><span>VR</span><span>Meta Quest 2 or equivalent</span></div>
+        </div>
+        <div class="req-col">
+          <h4>Recommended</h4>
+          <div class="req-row"><span>CPU</span><span>Intel i7-10700 / AMD Ryzen 7 3700X</span></div>
+          <div class="req-row"><span>RAM</span><span>16 GB</span></div>
+          <div class="req-row"><span>GPU</span><span>RTX 3070 / RX 6800</span></div>
+          <div class="req-row"><span>OS</span><span>Windows 11 64-bit</span></div>
+          <div class="req-row"><span>VR</span><span>Meta Quest 3 / Valve Index</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo" id="footLogo"></div>
+  <p id="footCopy"></p>
+  <div class="foot-links" id="footLinks"></div>
+</footer>
+
+<script>
+/* Apply colors */
+document.documentElement.style.setProperty('--accent', GAME.colors.accent);
+document.documentElement.style.setProperty('--accent-dark', GAME.colors.accentDark);
+document.documentElement.style.setProperty('--bg', GAME.colors.background);
+document.documentElement.style.setProperty('--text', GAME.colors.textColor);
+document.documentElement.style.setProperty('--glow', GAME.colors.accent + '80');
+
+/* Cursor */
+const cur = document.getElementById('cursor');
+const dot = document.getElementById('cursor-dot');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px';
+  dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+});
+
+/* Particles */
+const pc = document.getElementById('particleContainer');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.cssText = `left:${Math.random()*100}%;--drift:${(Math.random()-0.5)*80}px;animation-duration:${6+Math.random()*10}s;animation-delay:${Math.random()*8}s;opacity:${0.3+Math.random()*0.5}`;
+  pc.appendChild(p);
+}
+
+/* Populate from GAME settings */
+document.getElementById('navLogo').textContent = GAME.name;
+document.getElementById('footLogo').textContent = GAME.name;
+document.getElementById('footCopy').textContent = '© 2025 ' + GAME.name + ' — All rights reserved';
+document.getElementById('heroTitle').innerHTML = GAME.name + '<em>' + GAME.subtitle + '</em>';
+document.getElementById('heroSub').textContent = GAME.tagline;
+document.getElementById('aboutTitle').textContent = GAME.name;
+document.getElementById('aboutText').innerHTML =
+  `<p>${GAME.aboutText1}</p><p>${GAME.aboutText2}</p><p><strong>${GAME.aboutText3}</strong></p>`;
+document.getElementById('mpDesc').textContent = GAME.multiplayerDesc;
+document.getElementById('dlSub').textContent = GAME.downloadMessage;
+
+/* Features */
+const fg = document.getElementById('featuresGrid');
+GAME.features.forEach(f => {
+  fg.innerHTML += `<div class="feat-card"><span class="feat-icon">${f.icon}</span><h3>${f.title}</h3><p>${f.desc}</p></div>`;
+});
+
+/* Modes */
+const ml = document.getElementById('modeList');
+GAME.modes.forEach(m => {
+  ml.innerHTML += `<div class="mode-card"><div class="mode-hex">${m.icon}</div><div class="mode-info"><h3>${m.title}<span class="badge">${m.badge}</span></h3><p>${m.desc}</p></div></div>`;
+});
+
+/* Live counter */
+let base = 1247;
+setInterval(() => {
+  base += Math.floor(Math.random() * 7) - 3;
+  if (base < 800) base = 800;
+  document.getElementById('liveCount').textContent = base.toLocaleString();
+}, 4000);
+
+/* Gallery */
+const gg = document.getElementById('galleryGrid');
+GAME.screenshots.forEach((s, i) => {
+  gg.innerHTML += `<div class="g-item"><div class="g-bg gb-${i}">${s.file ? `<img src="${s.file}" alt="${s.label}">` : `<span class="g-emoji">${s.emoji}</span>`}${!s.file ? `<span class="g-label">Screenshot Coming Soon</span>` : ''}</div><div class="g-hover"><div class="g-hover-title">${s.label}</div><div class="g-hover-sub">In-Game Screenshot</div></div></div>`;
+});
+
+/* Platforms */
+const pg = document.getElementById('platformGrid');
+GAME.platforms.forEach(p => {
+  pg.innerHTML += `<div class="plat-card"><span class="plat-icon">${p.icon}</span><h3>${p.name}</h3><p>${p.sub}</p><span class="plat-status ${p.live ? 'status-live' : 'status-soon'}">${p.status}</span></div>`;
+});
+
+/* Footer links */
+const fl = document.getElementById('footLinks');
+if (GAME.discordLink) fl.innerHTML += `<a href="${GAME.discordLink}" target="_blank">Discord</a>`;
+if (GAME.twitterLink) fl.innerHTML += `<a href="${GAME.twitterLink}" target="_blank">Twitter</a>`;
+if (GAME.steamLink) fl.innerHTML += `<a href="${GAME.steamLink}" target="_blank">Steam</a>`;
+
+/* Page nav */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+  return false;
+}
+</script>
+</body>
+</html>
