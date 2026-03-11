@@ -146,6 +146,17 @@ const GAME = {
   #cursor{width:18px;height:18px;border:1px solid var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform 0.08s}
   #cursor-dot{width:4px;height:4px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:99999;transform:translate(-50%,-50%)}
 
+  /* Hide custom cursor on touch/non-PC devices */
+  @media (hover: none) and (pointer: coarse) {
+    #cursor, #cursor-dot { display: none !important; }
+    body { cursor: auto; }
+    .btn, .g-item, .plat-card, .mode-card, .feat-card { cursor: pointer; }
+    .field-select { cursor: pointer; }
+    .submit-btn { cursor: pointer; }
+    .nav-links a { cursor: pointer; }
+    .foot-links a { cursor: pointer; }
+  }
+
   /* NOISE OVERLAY */
   body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9990;opacity:0.35}
 
@@ -629,13 +640,20 @@ document.documentElement.style.setProperty('--bg', GAME.colors.background);
 document.documentElement.style.setProperty('--text', GAME.colors.textColor);
 document.documentElement.style.setProperty('--glow', GAME.colors.accent + '80');
 
-/* Cursor */
+/* Cursor — only activate on devices with a real mouse (non-touch) */
 const cur = document.getElementById('cursor');
 const dot = document.getElementById('cursor-dot');
-document.addEventListener('mousemove', e => {
-  cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px';
-  dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
-});
+const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+if (!isTouchDevice) {
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px';
+    dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+  });
+} else {
+  cur.style.display = 'none';
+  dot.style.display = 'none';
+  document.body.style.cursor = 'auto';
+}
 
 /* Particles */
 const pc = document.getElementById('particleContainer');
