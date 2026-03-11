@@ -65,8 +65,8 @@ const GAME = {
     },
     {
       icon: "🔪",
-      title: "Traitor Mode",
-      badge: "NEW",
+      title: "Unavailable",
+      badge: "Unavailable",
       desc: "One player is secretly working against the group. Trust no one. Watch your back."
     },
     {
@@ -77,11 +77,14 @@ const GAME = {
     }
   ],
 
-  /* --- PLATFORM STATUS ("Coming Soon" or "Available Now") --- */
+  /* --- PLATFORM STATUS & DOWNLOAD LINKS ---
+     Change status to: "Available Now", "Coming Soon", or "Unavailable"
+     Paste your store/download URL after link: between the ""
+     Leave link as "" to hide the download button. --- */
   platforms: [
-    { icon: "🥽", name: "Meta Quest", sub: "Quest 2 / 3 / Pro", status: "Available Now", live: true },
-    { icon: "🖥️", name: "PC VR", sub: "SteamVR / Index", status: "Available Now", live: true },
-    { icon: "🎮", name: "PSVR2", sub: "PlayStation 5", status: "Coming Soon", live: false }
+    { icon: "🥽", name: "Meta Quest", sub: "Quest 2 / 3 / Pro", status: "Available Now", live: true,  link: "https://hhrhfdhgfhfghfgh.itch.io/somethings-behind-you" },
+    { icon: "🖥️", name: "PC VR",      sub: "SteamVR / Index",   status: "Unavailable",  live: false, link: "" },
+    { icon: "🎮", name: "PSVR2",      sub: "PlayStation 5",      status: "Unavailable",  live: false, link: "" }
   ],
 
   /* --- COLORS ---
@@ -92,6 +95,13 @@ const GAME = {
     background: "#0a0a0f",   /* Main background (very dark) */
     textColor: "#e8e0d0",    /* Main text color (bone white) */
   },
+
+  /* --- CONTACT FORM WEBHOOK ---
+     1. Go to Make.com and create a new scenario
+     2. Add a "Webhooks" module → "Custom webhook"
+     3. Copy the webhook URL and paste it below between the quotes
+     Leave as "" to disable the contact form submission. --- */
+  webhookURL: "https://hook.us2.make.com/74t7op0xsqtryf6oe3189rd8gj2foiy7",
 
   /* --- SOCIAL LINKS (leave "" if you don't have them yet) --- */
   discordLink: "",
@@ -301,6 +311,49 @@ const GAME = {
     .req-cols{grid-template-columns:1fr}
     footer{flex-direction:column;text-align:center}
   }
+  .plat-dl-btn{display:inline-block;margin-top:14px;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;padding:8px 20px;background:var(--accent-dark);color:var(--text);border:1px solid var(--accent);text-decoration:none;transition:all 0.3s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)}
+  .plat-dl-btn:hover{background:var(--accent);box-shadow:0 0 18px var(--glow)}
+
+  /* CONTACT */
+  #contact{padding:110px 50px 80px;background:linear-gradient(to bottom,var(--bg),var(--bg2))}
+  .contact-wrap{max-width:1100px;margin:0 auto}
+  .contact-subhead{font-size:1.1rem;color:rgba(232,224,208,0.5);margin-top:16px;font-style:italic}
+  .contact-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:60px;margin-top:60px;align-items:start}
+  .contact-form-box{background:rgba(0,0,0,0.5);border:1px solid rgba(139,0,0,0.25);padding:40px}
+
+  .field-group{margin-bottom:24px}
+  .field-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:rgba(232,224,208,0.5);display:block;margin-bottom:10px}
+  .req{color:var(--accent)}
+  .field-input{width:100%;background:rgba(0,0,0,0.6);border:1px solid rgba(139,0,0,0.3);color:var(--text);font-family:'Crimson Text',serif;font-size:1rem;padding:12px 16px;outline:none;transition:border-color 0.3s;-webkit-appearance:none}
+  .field-input:focus{border-color:var(--accent);box-shadow:0 0 10px rgba(204,0,0,0.15)}
+  .field-input::placeholder{color:rgba(232,224,208,0.2)}
+  .field-textarea{min-height:140px;resize:vertical}
+  .select-wrap{position:relative}
+  .field-select{cursor:none;background:rgba(0,0,0,0.6)}
+  .field-select option{background:#0a0a0f;color:var(--text)}
+
+  .submit-btn{width:100%;justify-content:center;display:block;text-align:center;border:none;cursor:none;font-size:0.8rem}
+  .submit-btn:disabled{opacity:0.5}
+
+  .form-success{text-align:center;padding:40px 20px;border:1px solid rgba(0,200,100,0.3);background:rgba(0,200,100,0.05);margin-bottom:24px}
+  .success-icon{font-size:2.5rem;display:block;margin-bottom:12px;animation:floatEmoji 3s ease-in-out infinite}
+  .form-success h3{font-family:'Creepster',cursive;font-size:1.8rem;color:rgba(0,220,110,0.9);letter-spacing:2px;margin-bottom:8px}
+  .form-success p{color:rgba(232,224,208,0.6);font-size:1rem}
+  .form-error{padding:12px 18px;border:1px solid rgba(204,0,0,0.4);background:rgba(139,0,0,0.1);color:rgba(204,0,0,0.8);font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:2px;margin-bottom:20px}
+
+  .contact-info{display:flex;flex-direction:column;gap:20px}
+  .info-card{background:linear-gradient(135deg,rgba(139,0,0,0.07),rgba(0,0,0,0.5));border:1px solid rgba(139,0,0,0.2);padding:24px;transition:border-color 0.3s}
+  .info-card:hover{border-color:rgba(204,0,0,0.4)}
+  .info-icon{font-size:1.6rem;display:block;margin-bottom:10px}
+  .info-card h3{font-family:'Creepster',cursive;font-size:1.2rem;color:var(--accent);letter-spacing:2px;margin-bottom:8px}
+  .info-card p{font-size:0.95rem;line-height:1.65;color:rgba(232,224,208,0.55)}
+  .response-time{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(232,224,208,0.3);display:flex;align-items:center;margin-top:8px}
+
+  @media(max-width:768px){
+    #contact{padding-left:20px;padding-right:20px}
+    .contact-grid{grid-template-columns:1fr}
+    .contact-form-box{padding:24px}
+  }
 </style>
 
 <!-- CURSOR -->
@@ -316,6 +369,7 @@ const GAME = {
     <li><a href="#" onclick="return showPage('multiplayer')" id="nav-multiplayer">Multiplayer</a></li>
     <li><a href="#" onclick="return showPage('gallery')" id="nav-gallery">Gallery</a></li>
     <li><a href="#" onclick="return showPage('download')" id="nav-download">Download</a></li>
+    <li><a href="#" onclick="return showPage('contact')" id="nav-contact">Contact</a></li>
   </ul>
 </nav>
 
@@ -428,6 +482,86 @@ const GAME = {
   </div>
 </div>
 
+<!-- CONTACT PAGE -->
+<div class="page" id="contact">
+  <div class="contact-wrap">
+    <div class="section-head">
+      <span class="section-tag">Get In Touch</span>
+      <h2 class="section-title">Contact Us</h2>
+      <div class="divider"></div>
+      <p class="contact-subhead">Have a question, bug report, or just want to say something survived the night? We want to hear it.</p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- FORM -->
+      <div class="contact-form-box">
+        <div id="formSuccess" class="form-success" style="display:none">
+          <span class="success-icon">👁️</span>
+          <h3>Message Received</h3>
+          <p>We see you. We'll be in touch soon.</p>
+        </div>
+        <div id="formError" class="form-error" style="display:none">
+          <p>⚠ Something went wrong. Make sure the webhook URL is set in settings.</p>
+        </div>
+
+        <div id="contactForm">
+          <div class="field-group">
+            <label class="field-label">Your Name <span class="req">*</span></label>
+            <input type="text" id="cf-name" class="field-input" placeholder="What do we call you?">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Email Address <span class="req">*</span></label>
+            <input type="email" id="cf-email" class="field-input" placeholder="your@email.com">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Subject</label>
+            <div class="select-wrap">
+              <select id="cf-subject" class="field-input field-select">
+                <option value="General Question">General Question</option>
+                <option value="Bug Report">Bug Report</option>
+                <option value="Multiplayer Issue">Multiplayer Issue</option>
+                <option value="VR Compatibility">VR Compatibility</option>
+                <option value="Press / Media">Press / Media</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Message <span class="req">*</span></label>
+            <textarea id="cf-message" class="field-input field-textarea" placeholder="Tell us everything..."></textarea>
+          </div>
+          <button class="btn btn-red submit-btn" id="submitBtn" onclick="submitContact()">
+            <span id="submitText">Send Message</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- INFO SIDEBAR -->
+      <div class="contact-info">
+        <div class="info-card">
+          <span class="info-icon">🎮</span>
+          <h3>Bug Reports</h3>
+          <p>Found something broken? Tell us exactly what happened, your headset model, and what you were doing when it broke.</p>
+        </div>
+        <div class="info-card">
+          <span class="info-icon">👥</span>
+          <h3>Multiplayer Issues</h3>
+          <p>Can't connect to friends? Include your region, headset, and whether you're using WiFi or ethernet.</p>
+        </div>
+        <div class="info-card">
+          <span class="info-icon">📰</span>
+          <h3>Press & Media</h3>
+          <p>Want to cover Something Is Behind You VR? Reach out and we'll get you a press kit and early access.</p>
+        </div>
+        <div class="response-time">
+          <div class="live-dot" style="display:inline-block;margin-right:8px"></div>
+          <span>We typically respond within 48 hours</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="foot-logo" id="footLogo"></div>
@@ -501,7 +635,10 @@ GAME.screenshots.forEach((s, i) => {
 /* Platforms */
 const pg = document.getElementById('platformGrid');
 GAME.platforms.forEach(p => {
-  pg.innerHTML += `<div class="plat-card"><span class="plat-icon">${p.icon}</span><h3>${p.name}</h3><p>${p.sub}</p><span class="plat-status ${p.live ? 'status-live' : 'status-soon'}">${p.status}</span></div>`;
+  const btn = p.link
+    ? `<a href="${p.link}" target="_blank" class="plat-dl-btn">Get It Now →</a>`
+    : '';
+  pg.innerHTML += `<div class="plat-card"><span class="plat-icon">${p.icon}</span><h3>${p.name}</h3><p>${p.sub}</p><span class="plat-status ${p.live ? 'status-live' : 'status-soon'}">${p.status}</span>${btn}</div>`;
 });
 
 /* Footer links */
@@ -509,6 +646,59 @@ const fl = document.getElementById('footLinks');
 if (GAME.discordLink) fl.innerHTML += `<a href="${GAME.discordLink}" target="_blank">Discord</a>`;
 if (GAME.twitterLink) fl.innerHTML += `<a href="${GAME.twitterLink}" target="_blank">Twitter</a>`;
 if (GAME.steamLink) fl.innerHTML += `<a href="${GAME.steamLink}" target="_blank">Steam</a>`;
+
+/* Contact form */
+async function submitContact() {
+  const name    = document.getElementById('cf-name').value.trim();
+  const email   = document.getElementById('cf-email').value.trim();
+  const subject = document.getElementById('cf-subject').value;
+  const message = document.getElementById('cf-message').value.trim();
+  const errBox  = document.getElementById('formError');
+  const sucBox  = document.getElementById('formSuccess');
+  const btn     = document.getElementById('submitBtn');
+  const txt     = document.getElementById('submitText');
+
+  errBox.style.display = 'none';
+
+  if (!name)    { errBox.textContent = '⚠ Please enter your name.'; errBox.style.display='block'; return; }
+  if (!email || !email.includes('@')) { errBox.textContent = '⚠ Please enter a valid email.'; errBox.style.display='block'; return; }
+  if (!message) { errBox.textContent = '⚠ Please write a message.'; errBox.style.display='block'; return; }
+
+  if (!GAME.webhookURL) {
+    errBox.textContent = '⚠ No webhook URL set. Add it in the GAME settings at the top of the file.';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  txt.textContent = 'Sending...';
+
+  const payload = {
+    name,
+    email,
+    subject,
+    message,
+    date: new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }),
+    time: new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' }),
+    timestamp: new Date().toISOString()
+  };
+
+  try {
+    await fetch(GAME.webhookURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      mode: 'no-cors'
+    });
+    document.getElementById('contactForm').style.display = 'none';
+    sucBox.style.display = 'block';
+  } catch (e) {
+    errBox.textContent = '⚠ Failed to send. Check your webhook URL in settings.';
+    errBox.style.display = 'block';
+    btn.disabled = false;
+    txt.textContent = 'Send Message';
+  }
+}
 
 /* Page nav */
 function showPage(id) {
