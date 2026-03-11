@@ -67,7 +67,7 @@ const GAME = {
       icon: "🔪",
       title: "Unavailable",
       badge: "Unavailable",
-      desc: "One player is secretly working against the group. Trust no one. Watch your back."
+      desc: "Hint:One player is secretly working against the group. Trust no one. Watch your back."
     },
     {
       icon: "🏃",
@@ -299,17 +299,70 @@ const GAME = {
   .foot-links a{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:rgba(232,224,208,0.3);text-decoration:none;transition:color 0.3s}
   .foot-links a:hover{color:var(--accent)}
 
+  /* HAMBURGER */
+  .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:1100}
+  .hamburger span{display:block;width:24px;height:2px;background:var(--accent);transition:all 0.3s;transform-origin:center}
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+  /* TABLET */
+  @media(max-width:1024px){
+    nav{padding:16px 30px}
+    .nav-links{gap:20px}
+    .nav-links a{font-size:0.62rem;letter-spacing:2px}
+    #about,#multiplayer,#gallery,#download,#contact{padding-left:30px;padding-right:30px}
+    .about-grid{gap:40px}
+    .mp-grid{gap:40px}
+    .features{grid-template-columns:repeat(3,1fr);gap:16px}
+    .contact-grid{gap:36px}
+    .platform-grid{gap:12px}
+    .sysreq{padding:28px}
+  }
+
+  /* MOBILE */
   @media(max-width:768px){
-    nav{padding:14px 18px}
-    .nav-links{gap:10px}
-    .nav-links a{font-size:0.58rem;letter-spacing:1px}
-    #home,#about,#multiplayer,#gallery,#download{padding-left:20px;padding-right:20px}
-    .about-grid,.mp-grid{grid-template-columns:1fr}
-    .about-visual{height:260px}
-    .features,.platform-grid{grid-template-columns:1fr}
+    .hamburger{display:flex}
+    .nav-links{display:none;flex-direction:column;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(0,0,0,0.97);justify-content:center;align-items:center;z-index:1050;gap:32px}
+    .nav-links.open{display:flex}
+    .nav-links a{font-size:1.1rem;letter-spacing:4px}
+    nav{padding:14px 20px}
+    #home,#about,#multiplayer,#gallery,#download,#contact{padding-left:20px;padding-right:20px}
+    #about,#multiplayer,#gallery,#download,#contact{padding-top:80px;padding-bottom:60px}
+    .eye-wrap{width:120px;height:120px;margin-bottom:28px}
+    .eyeball{width:120px;height:120px}
+    .eye-veins{width:180px;height:180px}
+    .hero-btns{flex-direction:column;align-items:center;gap:12px}
+    .btn{padding:13px 28px;font-size:0.7rem}
+    .about-grid,.mp-grid,.contact-grid{grid-template-columns:1fr;gap:36px}
+    .features{grid-template-columns:1fr;gap:14px}
+    .platform-grid{grid-template-columns:1fr;gap:14px}
+    .req-cols{grid-template-columns:1fr;gap:20px}
     .gallery-grid{grid-template-columns:1fr 1fr}
-    .req-cols{grid-template-columns:1fr}
-    footer{flex-direction:column;text-align:center}
+    .g-item:nth-child(1),.g-item:nth-child(5){grid-column:span 2;min-height:180px}
+    .about-visual{height:220px}
+    .ring:nth-child(1){width:180px;height:180px}
+    .ring:nth-child(2){width:140px;height:140px}
+    .ring:nth-child(3){width:100px;height:100px}
+    .contact-form-box{padding:22px}
+    footer{flex-direction:column;text-align:center;padding:28px 20px;gap:12px}
+    .foot-links{justify-content:center}
+    .section-head{margin-bottom:40px}
+  }
+
+  /* SMALL MOBILE */
+  @media(max-width:480px){
+    .nav-logo{font-size:1rem}
+    .hero-title{font-size:2.2rem;letter-spacing:2px}
+    .hero-sub{font-size:0.65rem;letter-spacing:3px}
+    .section-title{font-size:1.9rem}
+    .gallery-grid{grid-template-columns:1fr}
+    .g-item:nth-child(1),.g-item:nth-child(5){grid-column:span 1}
+    .live-count{font-size:2rem}
+    .mp-info h2{font-size:1.7rem}
+    .dl-title{font-size:2.4rem}
+    .sysreq{padding:20px}
+    footer p{font-size:0.55rem}
   }
   .plat-dl-btn{display:inline-block;margin-top:14px;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;padding:8px 20px;background:var(--accent-dark);color:var(--text);border:1px solid var(--accent);text-decoration:none;transition:all 0.3s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)}
   .plat-dl-btn:hover{background:var(--accent);box-shadow:0 0 18px var(--glow)}
@@ -349,11 +402,7 @@ const GAME = {
   .info-card p{font-size:0.95rem;line-height:1.65;color:rgba(232,224,208,0.55)}
   .response-time{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(232,224,208,0.3);display:flex;align-items:center;margin-top:8px}
 
-  @media(max-width:768px){
-    #contact{padding-left:20px;padding-right:20px}
-    .contact-grid{grid-template-columns:1fr}
-    .contact-form-box{padding:24px}
-  }
+  
 </style>
 
 <!-- CURSOR -->
@@ -363,7 +412,10 @@ const GAME = {
 <!-- NAV -->
 <nav>
   <div class="nav-logo" id="navLogo"></div>
-  <ul class="nav-links">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
     <li><a href="#" onclick="return showPage('home')" class="active" id="nav-home">Home</a></li>
     <li><a href="#" onclick="return showPage('about')" id="nav-about">About</a></li>
     <li><a href="#" onclick="return showPage('multiplayer')" id="nav-multiplayer">Multiplayer</a></li>
@@ -700,6 +752,12 @@ async function submitContact() {
   }
 }
 
+/* Hamburger menu */
+function toggleMenu() {
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
 /* Page nav */
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -707,6 +765,9 @@ function showPage(id) {
   document.getElementById(id).classList.add('active');
   document.getElementById('nav-' + id).classList.add('active');
   window.scrollTo(0, 0);
+  // Close mobile menu if open
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('navLinks').classList.remove('open');
   return false;
 }
 </script>
